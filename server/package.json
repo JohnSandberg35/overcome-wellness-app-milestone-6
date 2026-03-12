@@ -2,6 +2,7 @@
   "name": "overcome-wellness-server",
   "version": "1.0.0",
   "description": "Backend API for Overcome Wellness App",
+  "engines": { "node": "20.x" },
   "main": "index.js",
   "type": "module",
   "scripts": {
