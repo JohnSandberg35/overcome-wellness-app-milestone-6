@@ -1,48 +1,16 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle, Calendar, Shield, Star } from "lucide-react";
 
-const mentors = [
-  {
-    name: "Dr. Sarah Chen",
-    role: "Licensed Therapist",
-    specialty: "Specializes in Trauma",
-    bio: "15+ years helping individuals and couples navigate recovery with compassion.",
-    rating: 4.9,
-    professional: true,
-  },
-  {
-    name: "James Miller",
-    role: "Certified Counselor",
-    specialty: "Addiction Specialist",
-    bio: "CSAT-certified with a focus on evidence-based recovery methods.",
-    rating: 4.8,
-    professional: true,
-  },
-  {
-    name: "Maria Gonzalez",
-    role: "Recovery Coach",
-    specialty: "Behavioral Patterns",
-    bio: "Empowering change through accountability and structured goal-setting.",
-    rating: 4.7,
-    professional: true,
-  },
-  {
-    name: "David Park",
-    role: "Peer Mentor",
-    specialty: "Lived Experience",
-    bio: "5 years in recovery. Here to walk alongside you with understanding.",
-    rating: 4.9,
-    professional: false,
-  },
-  {
-    name: "Rachel Adams",
-    role: "Peer Mentor",
-    specialty: "Partner Support",
-    bio: "Supporting spouses and partners through betrayal trauma healing.",
-    rating: 4.8,
-    professional: false,
-  },
-];
+type Mentor = {
+  id: number;
+  name: string;
+  role: string;
+  specialty: string;
+  bio: string;
+  rating: number;
+  professional: boolean;
+};
 
 const container = {
   hidden: {},
@@ -55,6 +23,31 @@ const item = {
 };
 
 export default function MentorsPage() {
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadMentors() {
+      try {
+        setError(null);
+        const res = await fetch("http://localhost:3001/api/mentors");
+        if (!res.ok) {
+          throw new Error(`Request failed with status ${res.status}`);
+        }
+        const data: Mentor[] = await res.json();
+        setMentors(data);
+      } catch (err) {
+        console.error("Failed to fetch mentors", err);
+        setError("Unable to load mentors right now. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadMentors();
+  }, []);
+
   return (
     <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
       <motion.div
@@ -67,6 +60,14 @@ export default function MentorsPage() {
           <h1 className="text-xl font-bold text-foreground">
             Professional Help & Mentors
           </h1>
+          {loading && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Loading mentors...
+            </p>
+          )}
+          {error && !loading && (
+            <p className="mt-1 text-xs text-destructive">{error}</p>
+          )}
           <p className="mt-1 text-sm text-muted-foreground">
             Connect with qualified professionals or experienced peers.
           </p>
@@ -81,8 +82,15 @@ export default function MentorsPage() {
             {mentors
               .filter((m) => m.professional)
               .map((m) => (
-                <MentorCard key={m.name} mentor={m} />
+                <MentorCard key={m.id} mentor={m} />
               ))}
+            {!loading &&
+              !error &&
+              mentors.filter((m) => m.professional).length === 0 && (
+                <p className="text-xs text-muted-foreground">
+                  No licensed professionals are available right now.
+                </p>
+              )}
           </div>
         </motion.div>
 
@@ -95,8 +103,15 @@ export default function MentorsPage() {
             {mentors
               .filter((m) => !m.professional)
               .map((m) => (
-                <MentorCard key={m.name} mentor={m} />
+                <MentorCard key={m.id} mentor={m} />
               ))}
+            {!loading &&
+              !error &&
+              mentors.filter((m) => !m.professional).length === 0 && (
+                <p className="text-xs text-muted-foreground">
+                  No peer mentors are available right now.
+                </p>
+              )}
           </div>
         </motion.div>
       </motion.div>
@@ -107,7 +122,7 @@ export default function MentorsPage() {
 function MentorCard({
   mentor,
 }: {
-  mentor: (typeof mentors)[number];
+  mentor: Mentor;
 }) {
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm">
