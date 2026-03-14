@@ -16,18 +16,21 @@ const resources = [
     desc: "How neuroplasticity supports lasting change.",
     icon: Leaf,
     color: "bg-sage-light text-sage-dark",
+    to: "/resources/science-of-recovery",
   },
   {
     title: "Building New Habits",
     desc: "Evidence-based strategies for daily progress.",
     icon: Sunrise,
     color: "bg-sunrise-light text-sunrise",
+    to: "/resources/building-new-habits",
   },
   {
     title: "Understanding Triggers",
     desc: "Learn to identify and manage urges safely.",
     icon: Heart,
     color: "bg-lavender-light text-lavender",
+    to: "/resources/understanding-triggers",
   },
 ];
 
@@ -117,9 +120,10 @@ export default function LandingPage() {
           </h2>
           <div className="flex flex-col gap-2.5">
             {resources.map((r) => (
-              <div
+              <Link
                 key={r.title}
-                className="flex items-center gap-3.5 rounded-xl bg-card p-4 shadow-sm transition-all hover:shadow-md cursor-pointer"
+                to={r.to}
+                className="flex items-center gap-3.5 rounded-xl bg-card p-4 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               >
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${r.color}`}
@@ -132,7 +136,7 @@ export default function LandingPage() {
                   </p>
                   <p className="text-xs text-muted-foreground">{r.desc}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </motion.div>

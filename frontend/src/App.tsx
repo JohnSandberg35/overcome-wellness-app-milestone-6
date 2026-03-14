@@ -9,6 +9,9 @@ import Onboarding from "./pages/Onboarding";
 import Curriculum from "./pages/Curriculum";
 import Mentors from "./pages/Mentors";
 import Chat from "./pages/Chat";
+import ScienceOfRecovery from "./pages/ScienceOfRecovery";
+import BuildingNewHabits from "./pages/BuildingNewHabits";
+import UnderstandingTriggers from "./pages/UnderstandingTriggers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +30,9 @@ const App = () => (
             <Route path="/curriculum" element={<Curriculum />} />
             <Route path="/mentors" element={<Mentors />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
+            <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
+            <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
