@@ -105,8 +105,8 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <BookOpen className="h-5 w-5" />
               <div>
-                <p className="text-sm font-semibold">Continue Learning</p>
-                <p className="text-xs opacity-80">Module 3 · Step 2 of 5</p>
+                <p className="text-sm font-semibold">Start Your Journey</p>
+                <p className="text-xs opacity-80">Explore the 5 steps to rewire your habits</p>
               </div>
             </div>
             <ArrowRight className="h-4 w-4" />

@@ -6,13 +6,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppHeader, QuickExitButton } from "@/components/AppShell";
 import Landing from "./pages/Landing";
 import Onboarding from "./pages/Onboarding";
-import Curriculum from "./pages/Curriculum";
 import Mentors from "./pages/Mentors";
 import Chat from "./pages/Chat";
 import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
 import NotFound from "./pages/NotFound";
+import RewireSteps from "./pages/RewireSteps";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/curriculum" element={<Curriculum />} />
+            <Route path="/curriculum" element={<RewireSteps />} />
             <Route path="/mentors" element={<Mentors />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
