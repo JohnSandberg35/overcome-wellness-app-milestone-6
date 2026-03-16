@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle, Calendar, Shield, Star } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
-type Mentor = {
+const API_URL = import.meta.env.VITE_API_URL || "https://hopeful-magic-production-ba0b.up.railway.app";
+
+interface Mentor {
   id: number;
   name: string;
   role: string;
@@ -10,7 +12,13 @@ type Mentor = {
   bio: string;
   rating: number;
   professional: boolean;
-};
+}
+
+async function fetchMentors(): Promise<Mentor[]> {
+  const res = await fetch(`${API_URL}/api/mentors`);
+  if (!res.ok) throw new Error("Failed to fetch mentors");
+  return res.json();
+}
 
 const container = {
   hidden: {},
@@ -23,30 +31,26 @@ const item = {
 };
 
 export default function MentorsPage() {
-  const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: mentors, isLoading, isError } = useQuery({
+    queryKey: ["mentors"],
+    queryFn: fetchMentors,
+  });
 
-  useEffect(() => {
-    async function loadMentors() {
-      try {
-        setError(null);
-        const res = await fetch("http://localhost:3001/api/mentors");
-        if (!res.ok) {
-          throw new Error(`Request failed with status ${res.status}`);
-        }
-        const data: Mentor[] = await res.json();
-        setMentors(data);
-      } catch (err) {
-        console.error("Failed to fetch mentors", err);
-        setError("Unable to load mentors right now. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+        <p className="text-sm text-muted-foreground">Loading mentors...</p>
+      </div>
+    );
+  }
 
-    loadMentors();
-  }, []);
+  if (isError || !mentors) {
+    return (
+      <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+        <p className="text-sm text-destructive">Failed to load mentors. Please try again later.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
@@ -60,14 +64,6 @@ export default function MentorsPage() {
           <h1 className="text-xl font-bold text-foreground">
             Professional Help & Mentors
           </h1>
-          {loading && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              Loading mentors...
-            </p>
-          )}
-          {error && !loading && (
-            <p className="mt-1 text-xs text-destructive">{error}</p>
-          )}
           <p className="mt-1 text-sm text-muted-foreground">
             Connect with qualified professionals or experienced peers.
           </p>
@@ -84,13 +80,6 @@ export default function MentorsPage() {
               .map((m) => (
                 <MentorCard key={m.id} mentor={m} />
               ))}
-            {!loading &&
-              !error &&
-              mentors.filter((m) => m.professional).length === 0 && (
-                <p className="text-xs text-muted-foreground">
-                  No licensed professionals are available right now.
-                </p>
-              )}
           </div>
         </motion.div>
 
@@ -105,13 +94,6 @@ export default function MentorsPage() {
               .map((m) => (
                 <MentorCard key={m.id} mentor={m} />
               ))}
-            {!loading &&
-              !error &&
-              mentors.filter((m) => !m.professional).length === 0 && (
-                <p className="text-xs text-muted-foreground">
-                  No peer mentors are available right now.
-                </p>
-              )}
           </div>
         </motion.div>
       </motion.div>
@@ -119,11 +101,7 @@ export default function MentorsPage() {
   );
 }
 
-function MentorCard({
-  mentor,
-}: {
-  mentor: Mentor;
-}) {
+function MentorCard({ mentor }: { mentor: Mentor }) {
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm">
       <div className="flex items-start gap-3">
