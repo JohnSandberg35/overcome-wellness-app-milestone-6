@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "::",
     port: parseInt(process.env.PORT || "8080"),
+    allowedHosts: ["overcome-wellness-app-milestone-6-production.up.railway.app"],
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
