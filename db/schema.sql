@@ -1,116 +1,47 @@
--- ==========================================
--- Core Entities
--- ==========================================
+-- Overcome Wellness App - Database Schema
 
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    
-    -- Onboarding Choices
-    account_type VARCHAR(50) NOT NULL, -- e.g., 'recovering', 'affected'
-    is_anonymous BOOLEAN DEFAULT true,
-    display_name VARCHAR(100), 
-    real_name VARCHAR(255),    
-    location_region VARCHAR(100), 
-    
-    -- Foreign key to mentors added via ALTER TABLE below
-    assigned_mentor_id UUID, 
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS mentors (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL,
+  specialty VARCHAR(255) NOT NULL,
+  bio TEXT NOT NULL,
+  rating DECIMAL(2, 1) NOT NULL DEFAULT 4.5,
+  is_professional BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE onboarding_responses (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    question_text TEXT NOT NULL, 
-    answer_text TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE mentors (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    
-    mentor_type VARCHAR(50) NOT NULL, -- 'peer' or 'professional'
-    bio TEXT,
-    rating DECIMAL(3,2) DEFAULT 0.00, 
-    hourly_rate DECIMAL(10,2),        
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS curriculum_modules (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Establish the circular relationship between users and mentors
-ALTER TABLE users 
-ADD CONSTRAINT fk_assigned_mentor 
-FOREIGN KEY (assigned_mentor_id) REFERENCES mentors(id) ON DELETE SET NULL;
-
-
--- ==========================================
--- Group & Messaging Entities
--- ==========================================
-
-CREATE TABLE location_groups (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(100) NOT NULL, 
-    region VARCHAR(100) NOT NULL
+CREATE TABLE IF NOT EXISTS curriculum_steps (
+  id SERIAL PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES curriculum_modules(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  type VARCHAR(50) NOT NULL CHECK (type IN ('video', 'reading', 'notes')),
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE group_members (
-    group_id UUID REFERENCES location_groups(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (group_id, user_id)
+CREATE TABLE IF NOT EXISTS user_progress (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  step_id INTEGER NOT NULL REFERENCES curriculum_steps(id) ON DELETE CASCADE,
+  completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, step_id)
 );
 
-CREATE TABLE conversations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    type VARCHAR(50) NOT NULL, -- 'group' or 'dm'
-    group_id UUID REFERENCES location_groups(id) ON DELETE CASCADE, 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE conversation_participants (
-    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    PRIMARY KEY (conversation_id, user_id)
-);
-
-CREATE TABLE messages (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
-    sender_id UUID REFERENCES users(id) ON DELETE SET NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
--- ==========================================
--- Content & Module Entities
--- ==========================================
-
-CREATE TABLE modules (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    order_index INT NOT NULL, 
-    is_published BOOLEAN DEFAULT false
-);
-
-CREATE TABLE module_contents (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    module_id UUID REFERENCES modules(id) ON DELETE CASCADE,
-    title VARCHAR(255) NOT NULL,
-    content_type VARCHAR(50) NOT NULL, -- 'video', 'reading', 'assignment'
-    media_url VARCHAR(555),            
-    text_body TEXT,                    
-    order_index INT NOT NULL
-);
-
-CREATE TABLE user_progress (
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    content_id UUID REFERENCES module_contents(id) ON DELETE CASCADE,
-    status VARCHAR(50) DEFAULT 'completed',
-    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, content_id)
-);
+CREATE INDEX IF NOT EXISTS idx_mentors_is_professional ON mentors(is_professional);
+CREATE INDEX IF NOT EXISTS idx_curriculum_steps_module_id ON curriculum_steps(module_id);
+CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id);
