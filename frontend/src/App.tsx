@@ -13,6 +13,8 @@ import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
+import Login from "./pages/Login";
+import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
@@ -21,22 +23,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AppHeader />
-        <main className="min-h-[calc(100vh-3.5rem)]">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/curriculum" element={<RewireSteps />} />
-            <Route path="/mentors" element={<Mentors />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
-            <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
-            <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppHeader />
+          <main className="min-h-[calc(100vh-3.5rem)]">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/curriculum" element={<RewireSteps />} />
+              <Route path="/mentors" element={<Mentors />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
+              <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
+              <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <QuickExitButton />
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
