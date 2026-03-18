@@ -9,7 +9,6 @@ import {
   UserCheck,
   Menu,
   X,
-  ExternalLink,
   Shield,
 } from "lucide-react";
 
@@ -20,20 +19,6 @@ const navItems = [
   { title: "Mentors", path: "/mentors", icon: Users },
   { title: "Chat", path: "/chat", icon: MessageCircle },
 ];
-
-export function QuickExitButton() {
-  return (
-    <a
-      href="https://weather.com"
-      className="fixed bottom-4 right-4 z-[100] flex items-center gap-1.5 rounded-full bg-muted px-3 py-2 text-xs font-medium text-muted-foreground shadow-md transition-all hover:bg-muted-foreground hover:text-muted"
-      title="Quick Exit"
-    >
-      <ExternalLink className="h-3.5 w-3.5" />
-      Exit
-    </a>
-  );
-}
-
 export function AppHeader() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
