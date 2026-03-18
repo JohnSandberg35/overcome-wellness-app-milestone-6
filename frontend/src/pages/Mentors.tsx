@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Calendar, Shield, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://hopeful-magic-production-ba0b.up.railway.app";
 
@@ -102,6 +103,8 @@ export default function MentorsPage() {
 }
 
 function MentorCard({ mentor }: { mentor: Mentor }) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm">
       <div className="flex items-start gap-3">
@@ -129,11 +132,30 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
       </p>
 
       <div className="flex gap-2">
-        <button className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:opacity-90">
+        <button
+          type="button"
+          onClick={() => navigate("/chat", { state: { tab: "mentor", mentor } })}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:opacity-90"
+        >
           <MessageCircle className="h-3.5 w-3.5" /> Message
         </button>
         {mentor.professional && (
-          <button className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-muted py-2.5 text-xs font-semibold text-foreground transition-all hover:bg-muted-foreground/10">
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/book", {
+                state: {
+                  mentor: {
+                    id: mentor.id,
+                    name: mentor.name,
+                    role: mentor.role,
+                    specialty: mentor.specialty,
+                  },
+                },
+              })
+            }
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-muted py-2.5 text-xs font-semibold text-foreground transition-all hover:bg-muted-foreground/10"
+          >
             <Calendar className="h-3.5 w-3.5" /> Book
           </button>
         )}

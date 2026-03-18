@@ -8,6 +8,7 @@ import Landing from "./pages/Landing";
 import Onboarding from "./pages/Onboarding";
 import Mentors from "./pages/Mentors";
 import Chat from "./pages/Chat";
+import BookMentor from "./pages/BookMentor";
 import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
@@ -34,13 +35,13 @@ const App = () => (
               <Route path="/curriculum" element={<RewireSteps />} />
               <Route path="/mentors" element={<Mentors />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/book" element={<BookMentor />} />
               <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
               <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
               <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <QuickExitButton />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
