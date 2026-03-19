@@ -1,5 +1,18 @@
 -- Overcome Wellness App - Database Schema
+-- Single source of truth for all database tables
+-- Run with: psql -U postgres -d overcome_wellness -f schema.sql
 
+-- Users: app users with auth support
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255),
+  account_type VARCHAR(50) DEFAULT 'recovering',
+  name VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Mentors: therapists and peer mentors
 CREATE TABLE IF NOT EXISTS mentors (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -11,13 +24,7 @@ CREATE TABLE IF NOT EXISTS mentors (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
+-- Curriculum modules: learning modules
 CREATE TABLE IF NOT EXISTS curriculum_modules (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -25,6 +32,7 @@ CREATE TABLE IF NOT EXISTS curriculum_modules (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Curriculum steps: steps within each module
 CREATE TABLE IF NOT EXISTS curriculum_steps (
   id SERIAL PRIMARY KEY,
   module_id INTEGER NOT NULL REFERENCES curriculum_modules(id) ON DELETE CASCADE,
@@ -34,6 +42,7 @@ CREATE TABLE IF NOT EXISTS curriculum_steps (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- User progress: tracks which steps a user has completed
 CREATE TABLE IF NOT EXISTS user_progress (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -42,6 +51,7 @@ CREATE TABLE IF NOT EXISTS user_progress (
   UNIQUE(user_id, step_id)
 );
 
+-- Indexes for common queries
 CREATE INDEX IF NOT EXISTS idx_mentors_is_professional ON mentors(is_professional);
 CREATE INDEX IF NOT EXISTS idx_curriculum_steps_module_id ON curriculum_steps(module_id);
 CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id);
