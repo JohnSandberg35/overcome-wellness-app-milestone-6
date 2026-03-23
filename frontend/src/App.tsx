@@ -16,7 +16,7 @@ import SiteBlockingGuide from "./pages/SiteBlockingGuide";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
 import Login from "./pages/Login";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient();
 
