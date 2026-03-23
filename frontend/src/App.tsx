@@ -25,23 +25,27 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AppHeader />
-        <main className="min-h-[calc(100vh-3.5rem)]">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/curriculum" element={<RewireSteps />} />
-            <Route path="/mentors" element={<Mentors />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
-            <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
-            <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
-            <Route path="/resources/site-blocking-setup" element={<SiteBlockingGuide />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppHeader />
+          <main className="min-h-[calc(100vh-3.5rem)]">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/curriculum" element={<RewireSteps />} />
+              <Route path="/mentors" element={<Mentors />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/book" element={<BookMentor />} />
+              <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
+              <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
+              <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
+              <Route path="/resources/site-blocking-setup" element={<SiteBlockingGuide />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
