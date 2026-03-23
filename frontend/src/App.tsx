@@ -12,6 +12,7 @@ import BookMentor from "./pages/BookMentor";
 import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
+import Resources from "./pages/Resources";
 import SiteBlockingGuide from "./pages/SiteBlockingGuide";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/mentors" element={<Mentors />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/book" element={<BookMentor />} />
+              <Route path="/resources" element={<Resources />} />
               <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
               <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
               <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />

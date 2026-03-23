@@ -10,12 +10,14 @@ import {
   Menu,
   X,
   Shield,
+  Library,
 } from "lucide-react";
 
 const navItems = [
   { title: "Home", path: "/", icon: Home },
   { title: "Onboarding", path: "/onboarding", icon: UserCheck },
   { title: "Curriculum", path: "/curriculum", icon: BookOpen },
+  { title: "Resources", path: "/resources", icon: Library },
   { title: "Mentors", path: "/mentors", icon: Users },
   { title: "Chat", path: "/chat", icon: MessageCircle },
 ];
@@ -77,7 +79,10 @@ export function AppHeader() {
 
               <div className="flex flex-1 flex-col gap-1 p-3">
                 {navItems.map((item) => {
-                  const active = location.pathname === item.path;
+                  const active =
+                    item.path === "/resources"
+                      ? location.pathname === "/resources"
+                      : location.pathname === item.path;
                   return (
                     <Link
                       key={item.path}
