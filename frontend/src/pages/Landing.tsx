@@ -5,6 +5,7 @@ import {
   BookOpen,
   Heart,
   Leaf,
+  Shield,
   Sunrise,
   Users,
   UserCheck,
@@ -28,6 +29,12 @@ const gentleTools = [
     desc: "Notice urges without judging yourself.",
     icon: Heart,
     to: "/resources/understanding-triggers",
+  },
+  {
+    title: "Site blocking setup",
+    desc: "Choose a blocking path for your device.",
+    icon: Shield,
+    to: "/resources/site-blocking-setup",
   },
 ];
 
