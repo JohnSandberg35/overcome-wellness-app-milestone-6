@@ -132,7 +132,7 @@ export default function RewireStepsPage() {
     setOpenStep((prev) => (prev === num ? null : num));
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-lg px-4 pb-24 pt-6 sm:pt-8 md:max-w-2xl lg:max-w-3xl">
       <motion.div
         variants={container}
         initial="hidden"
@@ -140,10 +140,10 @@ export default function RewireStepsPage() {
         className="flex flex-col gap-6"
       >
         <motion.div variants={item} className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
             The Rewire Program
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground text-balance">
+          <p className="mt-2 text-xs text-muted-foreground text-balance sm:text-sm md:text-base">
             Five steps to understand, interrupt, and rebuild your patterns.
           </p>
         </motion.div>
@@ -157,23 +157,23 @@ export default function RewireStepsPage() {
                   className={`cursor-pointer transition-shadow ${isOpen ? "shadow-md" : "hover:shadow-md"}`}
                   onClick={() => toggle(s.number)}
                 >
-                  <CardContent className="pt-5">
-                    <div className="flex items-start gap-4">
+                  <CardContent className="pt-4 sm:pt-5">
+                    <div className="flex items-start gap-3 sm:gap-4">
                       <div
-                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${s.iconBg}`}
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 ${s.iconBg}`}
                       >
-                        <s.icon className={`h-5 w-5 ${s.iconColor}`} />
+                        <s.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${s.iconColor}`} />
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
                             Step {s.number}
                           </span>
                         </div>
-                        <p className="mt-0.5 text-sm font-semibold text-foreground">
+                        <p className="mt-0.5 text-sm font-semibold text-foreground md:text-base">
                           {s.title}
                         </p>
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                           {s.description}
                         </p>
                       </div>
@@ -195,19 +195,19 @@ export default function RewireStepsPage() {
                           transition={{ duration: 0.25, ease: "easeInOut" }}
                           className="overflow-hidden"
                         >
-                          <div className="mt-5 border-t border-border pt-5">
-                            <p className="text-xs leading-relaxed text-muted-foreground">
+                          <div className="mt-4 border-t border-border pt-4 sm:mt-5 sm:pt-5">
+                            <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                               {s.detail}
                             </p>
 
-                            <h4 className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-foreground">
+                            <h4 className="mb-2 mt-4 text-[10px] font-semibold uppercase tracking-wider text-foreground sm:mt-5 sm:text-xs">
                               Practical tips
                             </h4>
-                            <ul className="flex flex-col gap-2">
+                            <ul className="flex flex-col gap-2 sm:gap-3">
                               {s.tips.map((tip, i) => (
                                 <li
                                   key={i}
-                                  className="flex gap-2 text-xs leading-relaxed text-muted-foreground"
+                                  className="flex gap-2 text-xs leading-relaxed text-muted-foreground sm:text-sm"
                                 >
                                   <span className="mt-0.5 shrink-0 text-primary">
                                     {i + 1}.
@@ -217,10 +217,10 @@ export default function RewireStepsPage() {
                               ))}
                             </ul>
 
-                            <h4 className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-foreground">
+                            <h4 className="mb-2 mt-4 text-[10px] font-semibold uppercase tracking-wider text-foreground sm:mt-5 sm:text-xs">
                               Helpful resources
                             </h4>
-                            <div className="flex flex-col gap-1.5">
+                            <div className="flex flex-col gap-1.5 sm:gap-2">
                               {s.links.map((link, i) => (
                                 <a
                                   key={i}
@@ -228,9 +228,9 @@ export default function RewireStepsPage() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   onClick={(e) => e.stopPropagation()}
-                                  className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                                  className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline sm:text-sm"
                                 >
-                                  <ExternalLink className="h-3 w-3 shrink-0" />
+                                  <ExternalLink className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
                                   {link.label}
                                 </a>
                               ))}

@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
 import Login from "./pages/Login";
 import { AuthProvider } from "@/hooks/useAuth";
+import PanicButton from "./components/PanicButton";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
+          <PanicButton />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
