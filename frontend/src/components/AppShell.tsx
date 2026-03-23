@@ -16,11 +16,11 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
-  { title: "Home", path: "/", icon: Home },
-  { title: "Onboarding", path: "/onboarding", icon: UserCheck },
-  { title: "Curriculum", path: "/curriculum", icon: BookOpen },
-  { title: "Mentors", path: "/mentors", icon: Users },
-  { title: "Chat", path: "/chat", icon: MessageCircle },
+  { title: "Home", path: "/", icon: Home, hideWhenAuthed: false },
+  { title: "Onboarding", path: "/onboarding", icon: UserCheck, hideWhenAuthed: true },
+  { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false },
+  { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false },
+  { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false },
 ];
 
 export function AppHeader() {
@@ -34,6 +34,8 @@ export function AppHeader() {
     setOpen(false);
     navigate("/");
   };
+
+  const visibleNavItems = navItems.filter((item) => !(item.hideWhenAuthed && user));
 
   return (
     <>
@@ -57,7 +59,6 @@ export function AppHeader() {
         </div>
       </header>
 
-      {/* Drawer overlay */}
       <AnimatePresence>
         {open && (
           <>
@@ -88,7 +89,7 @@ export function AppHeader() {
               </div>
 
               <div className="flex flex-1 flex-col gap-1 p-3">
-                {navItems.map((item) => {
+                {visibleNavItems.map((item) => {
                   const active = location.pathname === item.path;
                   return (
                     <Link
