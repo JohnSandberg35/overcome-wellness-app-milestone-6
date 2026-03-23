@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Check, ArrowRight, ArrowLeft, Heart, Users as UsersIcon } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const goals = [
   "Feel Clean",
@@ -16,12 +19,48 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [partnerMode, setPartnerMode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { signup, isLoading, error } = useAuth();
 
   const toggleGoal = (g: string) =>
     setSelectedGoals((prev) =>
       prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]
     );
+
+  const handleCreateAccount = async (event: FormEvent) => {
+    event.preventDefault();
+    setLocalError(null);
+
+    if (!email || !password) {
+      setLocalError("Email and password are required.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setLocalError("Password should be at least 6 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setLocalError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await signup({
+        email,
+        password,
+        accountType: partnerMode ? "affected" : "recovering",
+      });
+      navigate("/curriculum");
+    } catch {
+      // Error is surfaced via `error` from useAuth
+    }
+  };
 
   const steps = [
     // Step 0: Mode selection
@@ -132,23 +171,76 @@ export default function OnboardingPage() {
       </div>
     </motion.div>,
 
-    // Step 2: Confirmation
+    // Step 2: Account creation
     <motion.div
-      key="done"
+      key="account"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="flex flex-col items-center gap-6 text-center"
+      className="flex flex-col gap-6"
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sage-light">
-        <Check className="h-7 w-7 text-sage" />
-      </div>
-      <div>
-        <h2 className="text-xl font-bold text-foreground">You're all set</h2>
+      <div className="text-center">
+        <h2 className="text-xl font-bold text-foreground">
+          Create your account
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Your personalized path is ready. Let's begin.
+          Use an email and password you&apos;ll remember. You can keep the rest
+          of your journey anonymous.
         </p>
       </div>
+
+      <form className="flex flex-col gap-4" onSubmit={handleCreateAccount}>
+        <div className="flex flex-col gap-1.5 text-left">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5 text-left">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5 text-left">
+          <Label htmlFor="confirm-password">Confirm password</Label>
+          <Input
+            id="confirm-password"
+            type="password"
+            autoComplete="new-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        {(localError || error) && (
+          <p className="text-sm text-destructive">
+            {localError || error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-70"
+        >
+          {isLoading ? "Creating account..." : "Create Account"}
+          {!isLoading && <ArrowRight className="h-4 w-4" />}
+        </button>
+      </form>
     </motion.div>,
   ];
 
