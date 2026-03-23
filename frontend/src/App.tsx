@@ -11,6 +11,7 @@ import Chat from "./pages/Chat";
 import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
+import SiteBlockingGuide from "./pages/SiteBlockingGuide";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
             <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
             <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
+            <Route path="/resources/site-blocking-setup" element={<SiteBlockingGuide />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
