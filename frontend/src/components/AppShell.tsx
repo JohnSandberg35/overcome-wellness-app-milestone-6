@@ -12,15 +12,17 @@ import {
   Shield,
   LogIn,
   LogOut,
+  CircleUser,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
-  { title: "Home", path: "/", icon: Home, hideWhenAuthed: false },
-  { title: "Onboarding", path: "/onboarding", icon: UserCheck, hideWhenAuthed: true },
-  { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false },
-  { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false },
-  { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false },
+  { title: "Home", path: "/", icon: Home, hideWhenAuthed: false, authOnly: false },
+  { title: "Onboarding", path: "/onboarding", icon: UserCheck, hideWhenAuthed: true, authOnly: false },
+  { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
+  { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false, authOnly: false },
+  { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false, authOnly: false },
+  { title: "Account", path: "/account", icon: CircleUser, hideWhenAuthed: false, authOnly: true },
 ];
 
 export function AppHeader() {
@@ -35,7 +37,11 @@ export function AppHeader() {
     navigate("/");
   };
 
-  const visibleNavItems = navItems.filter((item) => !(item.hideWhenAuthed && user));
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.hideWhenAuthed && user) return false;
+    if (item.authOnly && !user) return false;
+    return true;
+  });
 
   return (
     <>
