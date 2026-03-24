@@ -12,6 +12,7 @@ import BookMentor from "./pages/BookMentor";
 import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
+import Resources from "./pages/Resources";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
 import Login from "./pages/Login";

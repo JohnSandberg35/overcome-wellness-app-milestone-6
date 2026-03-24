@@ -5,6 +5,7 @@ import {
   BookOpen,
   Heart,
   Leaf,
+  Library,
   Sunrise,
   Users,
   UserCheck,
@@ -247,6 +248,7 @@ export default function LandingPage() {
                   </div>
                 </div>
               </Link>
+            </div>
           </motion.section>
         </motion.div>
       </div>

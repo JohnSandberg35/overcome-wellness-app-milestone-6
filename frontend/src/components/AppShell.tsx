@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
   BookOpen,
+  Library,
   Users,
   MessageCircle,
   UserCheck,
@@ -22,7 +23,7 @@ const navItems = [
   { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
   { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false, authOnly: false },
   { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false, authOnly: false },
-  { title: "Resources", path: "/resources", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
+  { title: "Resources", path: "/resources", icon: Library, hideWhenAuthed: false, authOnly: false },
   { title: "Account", path: "/account", icon: CircleUser, hideWhenAuthed: false, authOnly: true },
 ];
 
@@ -97,7 +98,11 @@ export function AppHeader() {
 
               <div className="flex flex-1 flex-col gap-1 p-3">
                 {visibleNavItems.map((item) => {
-                  const active = location.pathname === item.path;
+                  const active =
+                    item.path === "/resources"
+                      ? location.pathname === "/resources" ||
+                        location.pathname.startsWith("/resources/")
+                      : location.pathname === item.path;
                   return (
                     <Link
                       key={item.path}
