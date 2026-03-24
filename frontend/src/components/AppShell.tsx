@@ -22,6 +22,7 @@ const navItems = [
   { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
   { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false, authOnly: false },
   { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false, authOnly: false },
+  { title: "Resources", path: "/resources", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
   { title: "Account", path: "/account", icon: CircleUser, hideWhenAuthed: false, authOnly: true },
 ];
 
