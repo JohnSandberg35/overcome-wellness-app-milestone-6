@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain,
@@ -8,9 +8,13 @@ import {
   RotateCcw,
   ChevronDown,
   ExternalLink,
+  CheckCircle2,
+  Lock,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const steps = [
   {
@@ -127,9 +131,42 @@ const item = {
 
 export default function RewireStepsPage() {
   const [openStep, setOpenStep] = useState<number | null>(null);
+  const { user } = useAuth();
+
+  // Load completed steps from localStorage per user
+  const storageKey = user ? `rewire_progress:${user.id || user.email}` : null;
+
+  const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
+    if (!storageKey) return [];
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist completed steps whenever they change
+  useEffect(() => {
+    if (!storageKey) return;
+    window.localStorage.setItem(storageKey, JSON.stringify(completedSteps));
+  }, [completedSteps, storageKey]);
+
+  const toggleComplete = (stepNumber: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCompletedSteps((prev) =>
+      prev.includes(stepNumber)
+        ? prev.filter((n) => n !== stepNumber)
+        : [...prev, stepNumber]
+    );
+  };
 
   const toggle = (num: number) =>
     setOpenStep((prev) => (prev === num ? null : num));
+
+  const completedCount = completedSteps.length;
+  const totalCount = steps.length;
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
     <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
@@ -148,13 +185,52 @@ export default function RewireStepsPage() {
           </p>
         </motion.div>
 
+        {/* Progress bar — only shown when signed in */}
+        {user && (
+          <motion.div variants={item} className="rounded-2xl bg-card p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-foreground">Your Progress</p>
+              <p className="text-xs text-muted-foreground">
+                {completedCount} of {totalCount} steps completed
+              </p>
+            </div>
+            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
+            {completedCount === totalCount && (
+              <p className="mt-2 text-center text-xs font-medium text-primary">
+                🎉 You've completed all steps!
+              </p>
+            )}
+          </motion.div>
+        )}
+
+        {/* Sign in prompt — only shown when logged out */}
+        {!user && (
+          <motion.div variants={item} className="rounded-2xl bg-muted p-4 text-center">
+            <Lock className="mx-auto mb-2 h-4 w-4 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">
+              <Link to="/login" className="font-medium text-primary hover:underline">
+                Sign in
+              </Link>{" "}
+              to track your progress through the program.
+            </p>
+          </motion.div>
+        )}
+
         <div className="flex flex-col gap-3">
           {steps.map((s) => {
             const isOpen = openStep === s.number;
+            const isCompleted = completedSteps.includes(s.number);
             return (
               <motion.div key={s.number} variants={item}>
                 <Card
-                  className={`cursor-pointer transition-shadow ${isOpen ? "shadow-md" : "hover:shadow-md"}`}
+                  className={`cursor-pointer transition-shadow ${isOpen ? "shadow-md" : "hover:shadow-md"} ${isCompleted ? "border-primary/30" : ""}`}
                   onClick={() => toggle(s.number)}
                 >
                   <CardContent className="pt-5">
@@ -169,6 +245,9 @@ export default function RewireStepsPage() {
                           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                             Step {s.number}
                           </span>
+                          {isCompleted && (
+                            <span className="text-xs font-medium text-primary">✓ Completed</span>
+                          )}
                         </div>
                         <p className="mt-0.5 text-sm font-semibold text-foreground">
                           {s.title}
@@ -236,7 +315,20 @@ export default function RewireStepsPage() {
                               ))}
                             </div>
 
-                            <div className="mt-5 flex justify-center">
+                            <div className="mt-5 flex items-center justify-between">
+                              {user && (
+                                <button
+                                  onClick={(e) => toggleComplete(s.number, e)}
+                                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                                    isCompleted
+                                      ? "bg-primary/10 text-primary hover:bg-primary/20"
+                                      : "bg-muted text-muted-foreground hover:bg-muted-foreground/10 hover:text-foreground"
+                                  }`}
+                                >
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                  {isCompleted ? "Mark Incomplete" : "Mark Complete"}
+                                </button>
+                              )}
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -244,7 +336,7 @@ export default function RewireStepsPage() {
                                   e.stopPropagation();
                                   setOpenStep(null);
                                 }}
-                                className="text-xs text-muted-foreground"
+                                className="text-xs text-muted-foreground ml-auto"
                               >
                                 Collapse
                               </Button>

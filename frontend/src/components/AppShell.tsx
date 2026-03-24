@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -10,20 +10,38 @@ import {
   Menu,
   X,
   Shield,
-  Library,
+  LogIn,
+  LogOut,
+  CircleUser,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
-  { title: "Home", path: "/", icon: Home },
-  { title: "Onboarding", path: "/onboarding", icon: UserCheck },
-  { title: "Curriculum", path: "/curriculum", icon: BookOpen },
-  { title: "Resources", path: "/resources", icon: Library },
-  { title: "Mentors", path: "/mentors", icon: Users },
-  { title: "Chat", path: "/chat", icon: MessageCircle },
+  { title: "Home", path: "/", icon: Home, hideWhenAuthed: false, authOnly: false },
+  { title: "Onboarding", path: "/onboarding", icon: UserCheck, hideWhenAuthed: true, authOnly: false },
+  { title: "Curriculum", path: "/curriculum", icon: BookOpen, hideWhenAuthed: false, authOnly: false },
+  { title: "Mentors", path: "/mentors", icon: Users, hideWhenAuthed: false, authOnly: false },
+  { title: "Chat", path: "/chat", icon: MessageCircle, hideWhenAuthed: false, authOnly: false },
+  { title: "Account", path: "/account", icon: CircleUser, hideWhenAuthed: false, authOnly: true },
 ];
+
 export function AppHeader() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    setOpen(false);
+    navigate("/");
+  };
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.hideWhenAuthed && user) return false;
+    if (item.authOnly && !user) return false;
+    return true;
+  });
 
   return (
     <>
@@ -47,7 +65,6 @@ export function AppHeader() {
         </div>
       </header>
 
-      {/* Drawer overlay */}
       <AnimatePresence>
         {open && (
           <>
@@ -78,11 +95,8 @@ export function AppHeader() {
               </div>
 
               <div className="flex flex-1 flex-col gap-1 p-3">
-                {navItems.map((item) => {
-                  const active =
-                    item.path === "/resources"
-                      ? location.pathname === "/resources"
-                      : location.pathname === item.path;
+                {visibleNavItems.map((item) => {
+                  const active = location.pathname === item.path;
                   return (
                     <Link
                       key={item.path}
@@ -101,10 +115,35 @@ export function AppHeader() {
                 })}
               </div>
 
-              <div className="border-t border-border p-4">
-                <p className="text-xs text-muted-foreground">
-                  Your privacy is our priority.
-                </p>
+              <div className="border-t border-border p-4 flex flex-col gap-3">
+                {user ? (
+                  <>
+                    <p className="text-xs text-muted-foreground truncate">
+                      Signed in as <span className="font-medium text-foreground">{user.email}</span>
+                    </p>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-muted-foreground">
+                      Your privacy is our priority.
+                    </p>
+                    <Link
+                      to="/login"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                    >
+                      <LogIn className="h-4 w-4" />
+                      Sign In
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.nav>
           </>

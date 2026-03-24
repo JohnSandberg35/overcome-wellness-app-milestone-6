@@ -5,12 +5,11 @@ import {
   BookOpen,
   Heart,
   Leaf,
-  Library,
-  Shield,
   Sunrise,
   Users,
   UserCheck,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const gentleTools = [
   {
@@ -30,12 +29,6 @@ const gentleTools = [
     desc: "Notice urges without judging yourself.",
     icon: Heart,
     to: "/resources/understanding-triggers",
-  },
-  {
-    title: "Site blocking setup",
-    desc: "Choose a blocking path for your device.",
-    icon: Shield,
-    to: "/resources/site-blocking-setup",
   },
 ];
 
@@ -58,6 +51,8 @@ const item = {
 };
 
 export default function LandingPage() {
+  const { user } = useAuth();
+
   return (
     <div className="bg-app-gradient">
       <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-md flex-col px-4 pb-8 pt-8">
@@ -91,16 +86,28 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-2 pt-1.5">
-                <Link
-                  to="/onboarding"
-                  className="group flex w-full items-center justify-center gap-2 rounded-full bg-emerald-400 px-4 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/35 transition-all hover:bg-emerald-300 hover:shadow-emerald-400/45 active:scale-[0.98]"
-                >
-                  Start my plan
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-                <p className="text-xs text-muted-foreground">
-                  3-minute check-in · you can exit anytime.
-                </p>
+                {user ? (
+                  <Link
+                    to="/curriculum"
+                    className="group flex w-full items-center justify-center gap-2 rounded-full bg-emerald-400 px-4 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/35 transition-all hover:bg-emerald-300 hover:shadow-emerald-400/45 active:scale-[0.98]"
+                  >
+                    Continue my journey
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/onboarding"
+                      className="group flex w-full items-center justify-center gap-2 rounded-full bg-emerald-400 px-4 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/35 transition-all hover:bg-emerald-300 hover:shadow-emerald-400/45 active:scale-[0.98]"
+                    >
+                      Start my plan
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
+                    <p className="text-xs text-muted-foreground">
+                      3-minute check-in · you can exit anytime.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </motion.section>
@@ -211,36 +218,6 @@ export default function LandingPage() {
                   </div>
                 </Link>
               ))}
-            </div>
-
-            <div className="mt-4 border-t border-white/10 pt-4">
-              <Link
-                to="/resources"
-                className="group relative block overflow-hidden rounded-2xl border border-sky-400/25 bg-gradient-to-r from-sky-500/[0.18] via-card/90 to-emerald-500/[0.14] px-4 py-4 shadow-[0_14px_44px_rgba(14,165,233,0.14)] transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-400/45 hover:shadow-[0_18px_52px_rgba(14,165,233,0.22)] active:scale-[0.99]"
-              >
-                <div className="pointer-events-none absolute -right-6 -top-14 h-32 w-32 rounded-full bg-emerald-400/15 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-16 -left-8 h-36 w-36 rounded-full bg-sky-400/20 blur-3xl" />
-
-                <div className="relative flex items-center gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/55 to-emerald-500/45 ring-1 ring-white/25 shadow-lg shadow-sky-900/30">
-                    <Library className="h-7 w-7 text-white drop-shadow-sm" />
-                  </div>
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-200/85">
-                      Read · Listen · Follow
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">
-                      More resources
-                    </p>
-                    <p className="text-xs leading-relaxed text-muted-foreground">
-                      Podcasts, articles, and accounts in one library.
-                    </p>
-                  </div>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition-all group-hover:bg-white/[0.16] group-hover:ring-sky-300/35">
-                    <ArrowRight className="h-4 w-4 text-sky-200 transition-transform group-hover:translate-x-0.5" />
-                  </div>
-                </div>
-              </Link>
             </div>
           </motion.section>
         </motion.div>
