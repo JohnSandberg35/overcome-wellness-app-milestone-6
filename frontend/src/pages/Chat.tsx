@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Flag, Users, UserCheck, MessageSquare, ChevronLeft, ArrowLeft } from "lucide-react";
-import { useLocation, Link } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 
@@ -118,7 +118,7 @@ function initials(name: string) {
 export default function ChatPage() {
   const location = useLocation();
   const state = location.state as { tab?: string; mentor?: ChatMentor } | null;
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const { data: mentorData } = useQuery({
     queryKey: ["mentors"],
@@ -362,6 +362,13 @@ export default function ChatPage() {
     }));
     setInput("");
   };
+
+  // Prevent unauthenticated access to community/group/direct chats.
+  // `isLoading` is true until the auth provider finishes reading localStorage.
+  if (isLoading) return null;
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
 
   return (
     <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
