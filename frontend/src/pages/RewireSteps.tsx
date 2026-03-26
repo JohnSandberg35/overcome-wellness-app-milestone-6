@@ -229,6 +229,13 @@ export default function RewireStepsPage() {
               </Link>{" "}
               to track your progress through the program.
             </p>
+            <Link
+              to="/onboarding"
+              state={{ redirectAfterSignup: "/curriculum" }}
+              className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:opacity-90"
+            >
+              Sign up
+            </Link>
           </motion.div>
         )}
 

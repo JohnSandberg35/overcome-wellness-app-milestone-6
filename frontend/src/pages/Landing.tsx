@@ -168,9 +168,7 @@ export default function LandingPage() {
                 <Users className="h-4.5 w-4.5" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-foreground">
-                  Community
-                </p>
+                <p className="text-sm font-semibold text-foreground">Community</p>
                 <p className="text-xs text-muted-foreground">
                   Share wins, setbacks, and everything in between.
                 </p>
