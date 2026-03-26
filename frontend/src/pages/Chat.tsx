@@ -364,8 +364,9 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-3.5rem)] max-w-lg flex-col">
-      <div className="px-4 pt-4">
+    <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-lg flex-col px-4 md:max-w-3xl md:px-8">
+      <div className="pt-4">
         <Link
           to="/"
           className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -402,7 +403,7 @@ export default function ChatPage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-sage-light p-3 text-xs text-sage-dark"
+          className="mt-3 flex items-center gap-2 rounded-xl bg-sage-light p-3 text-xs text-sage-dark"
         >
           <Flag className="h-3.5 w-3.5 shrink-0" />
           <span>Thank you. Our moderators will review this content.</span>
@@ -419,7 +420,7 @@ export default function ChatPage() {
       <div className="flex-1 overflow-hidden">
         <div className="flex h-full flex-col">
           {!showThreadList && (
-            <div className="border-b border-border bg-background px-4 py-2">
+            <div className="border-b border-border bg-background py-2">
               <button
                 type="button"
                 onClick={() => setShowThreadList(true)}
@@ -435,7 +436,7 @@ export default function ChatPage() {
           <div className="flex flex-1 overflow-hidden">
             {showThreadList && (
               <div className="w-full border-r border-border bg-card/30">
-                <div className="px-4 py-3">
+                <div className="py-3">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {activeTab === "group"
                       ? "Group Chats"
@@ -444,7 +445,7 @@ export default function ChatPage() {
                         : "Direct Messages"}
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 px-2 pb-3">
+                <div className="flex flex-col gap-1 pb-3">
                   {threads
                     .filter((t) => t.type === activeTab)
                     .map((t) => {
@@ -489,7 +490,7 @@ export default function ChatPage() {
 
             {!showThreadList && (
               <div className="flex flex-1 flex-col">
-                <div className="flex-1 overflow-y-auto px-4 py-4">
+                <div className="flex-1 overflow-y-auto py-4">
                   <div className="flex flex-col gap-3">
                     {/* Group member list with DM buttons */}
                     {activeTab === "group" && groupMembers.length > 0 && (
@@ -583,7 +584,7 @@ export default function ChatPage() {
                   </div>
                 </div>
 
-                <div className="border-t border-border bg-background p-3">
+                <div className="border-t border-border bg-background py-3">
                   <div className="flex items-center gap-2">
                     <input
                       value={input}
@@ -609,6 +610,7 @@ export default function ChatPage() {
 
       {/* Input */}
       {/* (Input is now inside the conversation view for all tabs) */}
+      </div>
     </div>
   );
 }

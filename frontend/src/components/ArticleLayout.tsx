@@ -18,7 +18,7 @@ export function ArticleLayout({
   children,
 }: ArticleLayoutProps) {
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-2xl md:px-8 md:pb-16 md:pt-10">
       <Link
         to="/"
         className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"

@@ -27,7 +27,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-md px-4 pb-24 pt-8 md:max-w-lg md:px-8 md:pb-16 md:pt-10">
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold text-foreground">Sign in</h1>
         <p className="mt-2 text-sm text-muted-foreground">

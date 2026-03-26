@@ -170,7 +170,8 @@ export default function RewireStepsPage() {
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-4xl md:px-12">
       <Link
         to="/"
         className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -360,6 +361,7 @@ export default function RewireStepsPage() {
           })}
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }

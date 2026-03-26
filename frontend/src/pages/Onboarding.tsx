@@ -245,7 +245,7 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-md px-4 pb-24 pt-8 md:max-w-lg md:px-8 md:pb-16 md:pt-10">
       {/* Progress */}
       <div className="mb-8 flex items-center gap-2">
         {[0, 1, 2].map((i) => (

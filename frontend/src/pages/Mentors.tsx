@@ -39,36 +39,41 @@ export default function MentorsPage() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
-        <Link
-          to="/"
-          className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Home
-        </Link>
-        <p className="text-sm text-muted-foreground">Loading mentors...</p>
+      <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+        <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-5xl md:px-8">
+          <Link
+            to="/"
+            className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Home
+          </Link>
+          <p className="text-sm text-muted-foreground">Loading mentors...</p>
+        </div>
       </div>
     );
   }
 
   if (isError || !mentors) {
     return (
-      <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
-        <Link
-          to="/"
-          className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Home
-        </Link>
-        <p className="text-sm text-destructive">Failed to load mentors. Please try again later.</p>
+      <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+        <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-5xl md:px-8">
+          <Link
+            to="/"
+            className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Home
+          </Link>
+          <p className="text-sm text-destructive">Failed to load mentors. Please try again later.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-5xl md:px-8 md:pb-16 md:pt-10">
       <Link
         to="/"
         className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -96,7 +101,7 @@ export default function MentorsPage() {
           <h2 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Shield className="h-3.5 w-3.5" /> Licensed Professionals
           </h2>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2.5 md:grid md:grid-cols-2 md:gap-4">
             {mentors
               .filter((m) => m.professional)
               .map((m) => (
@@ -110,7 +115,7 @@ export default function MentorsPage() {
           <h2 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Peer Mentors
           </h2>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2.5 md:grid md:grid-cols-2 md:gap-4">
             {mentors
               .filter((m) => !m.professional)
               .map((m) => (
@@ -119,6 +124,7 @@ export default function MentorsPage() {
           </div>
         </motion.div>
       </motion.div>
+      </div>
     </div>
   );
 }
@@ -127,7 +133,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm">
+    <div className="flex h-full flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage-light text-sm font-bold text-sage-dark">
           {mentor.name

@@ -78,7 +78,7 @@ export function SiteBlockingGuidePage() {
 
   return (
     <div className="bg-app-gradient">
-      <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-md flex-col px-4 pb-24 pt-6">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col px-4 pb-24 pt-6">
         <header className="mb-4 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-2">
             <Link
