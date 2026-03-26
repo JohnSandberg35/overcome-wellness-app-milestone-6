@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Send, Flag, Users, UserCheck, MessageSquare, ChevronLeft } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Send, Flag, Users, UserCheck, MessageSquare, ChevronLeft, ArrowLeft } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 
@@ -365,6 +365,15 @@ export default function ChatPage() {
 
   return (
     <div className="mx-auto flex h-[calc(100vh-3.5rem)] max-w-lg flex-col">
+      <div className="px-4 pt-4">
+        <Link
+          to="/"
+          className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Home
+        </Link>
+      </div>
       {/* Tabs */}
       <div className="flex border-b border-border bg-background">
         {tabs.map((t) => (

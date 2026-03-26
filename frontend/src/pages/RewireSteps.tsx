@@ -10,6 +10,7 @@ import {
   ExternalLink,
   CheckCircle2,
   Lock,
+  ArrowLeft,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -170,6 +171,13 @@ export default function RewireStepsPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+      <Link
+        to="/"
+        className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Home
+      </Link>
       <motion.div
         variants={container}
         initial="hidden"
