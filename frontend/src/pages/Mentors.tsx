@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { MessageCircle, Calendar, Shield, Star } from "lucide-react";
+import { MessageCircle, Calendar, Shield, Star, ArrowLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://hopeful-magic-production-ba0b.up.railway.app";
 
@@ -40,6 +40,13 @@ export default function MentorsPage() {
   if (isLoading) {
     return (
       <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+        <Link
+          to="/"
+          className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Home
+        </Link>
         <p className="text-sm text-muted-foreground">Loading mentors...</p>
       </div>
     );
@@ -48,6 +55,13 @@ export default function MentorsPage() {
   if (isError || !mentors) {
     return (
       <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+        <Link
+          to="/"
+          className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Home
+        </Link>
         <p className="text-sm text-destructive">Failed to load mentors. Please try again later.</p>
       </div>
     );
@@ -55,6 +69,13 @@ export default function MentorsPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+      <Link
+        to="/"
+        className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Home
+      </Link>
       <motion.div
         variants={container}
         initial="hidden"
