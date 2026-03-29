@@ -1,5 +1,5 @@
-import { useState, type ComponentType } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, type ComponentType } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -259,6 +259,17 @@ function FollowCard({ link, index }: { link: FollowLink; index: number }) {
 }
 
 export default function ResourcesPage() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [hash]);
+
   return (
     <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-lg px-4 pb-14 pt-5 md:max-w-5xl md:px-8 md:pb-16 md:pt-10">
@@ -313,7 +324,7 @@ export default function ResourcesPage() {
             </motion.div>
           </section>
 
-          <section className="space-y-4">
+          <section id="listen" className="space-y-4">
             <SectionHeader Icon={Headphones} label="Listen" accent="sky" />
             {listenLinks.length > 0 ? (
               <motion.div

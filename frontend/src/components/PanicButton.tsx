@@ -1,6 +1,7 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Volume2, VolumeX } from "lucide-react";
+import { Heart, Headphones } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -21,8 +22,6 @@ function getRandomMessage(exclude?: string): string {
 export default function PanicButton() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleOpen = useCallback(() => {
     setMessage(getRandomMessage());
@@ -30,37 +29,11 @@ export default function PanicButton() {
   }, []);
 
   const handleClose = useCallback((isOpen: boolean) => {
-    if (!isOpen) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      setIsPlaying(false);
-    }
     setOpen(isOpen);
   }, []);
 
-  const toggleAudio = useCallback(() => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play().catch(() => setIsPlaying(false));
-      setIsPlaying(true);
-    }
-  }, [isPlaying]);
-
   const newMessage = useCallback(() => {
     setMessage((prev) => getRandomMessage(prev));
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const handleEnded = () => setIsPlaying(false);
-    audio.addEventListener("ended", handleEnded);
-    return () => audio.removeEventListener("ended", handleEnded);
   }, []);
 
   return (
@@ -76,12 +49,9 @@ export default function PanicButton() {
         <Heart className="h-6 w-6 sm:h-7 sm:w-7" />
       </motion.button>
 
-      {/* Hidden audio element — swap calm.mp3 with your own file */}
-      <audio ref={audioRef} src="/audio/calm.mp3" loop preload="none" />
-
       {/* Calming dialog */}
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="max-w-md rounded-2xl sm:rounded-2xl">
+        <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto rounded-2xl sm:rounded-2xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={message}
@@ -92,12 +62,12 @@ export default function PanicButton() {
             >
               <DialogHeader className="text-center sm:text-center">
                 <motion.div
-                  className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sage-light"
+                  className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-sage-light sm:mb-4 sm:h-16 sm:w-16"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
                 >
-                  <Heart className="h-8 w-8 text-sage" />
+                  <Heart className="h-6 w-6 text-sage sm:h-8 sm:w-8" />
                 </motion.div>
                 <DialogTitle className="text-xl font-bold">
                   Breathe. You're okay.
@@ -107,22 +77,7 @@ export default function PanicButton() {
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="mt-6 flex flex-col items-center gap-3">
-                {/* Audio toggle */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={toggleAudio}
-                  className="flex items-center gap-2"
-                >
-                  {isPlaying ? (
-                    <VolumeX className="h-4 w-4" />
-                  ) : (
-                    <Volume2 className="h-4 w-4" />
-                  )}
-                  {isPlaying ? "Pause audio" : "Play calming audio"}
-                </Button>
-
+              <div className="mt-4 flex flex-col items-center gap-2 sm:mt-6 sm:gap-3">
                 {/* New message button */}
                 <Button
                   variant="ghost"
@@ -131,6 +86,20 @@ export default function PanicButton() {
                   className="text-xs text-muted-foreground"
                 >
                   Show another message
+                </Button>
+
+                {/* Link to Listen resources */}
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => handleClose(false)}
+                >
+                  <Link to="/resources#listen">
+                    <Headphones className="h-4 w-4" />
+                    Listen to something calming
+                  </Link>
                 </Button>
               </div>
             </motion.div>

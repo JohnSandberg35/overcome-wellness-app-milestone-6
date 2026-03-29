@@ -18,6 +18,7 @@ import RewireSteps from "./pages/RewireSteps";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
 import { AuthProvider } from "./hooks/useAuth";
+import PanicButton from "./components/PanicButton";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <AppHeader />
+          <PanicButton />
           <main className="min-h-[calc(100vh-4rem)]">
             <Routes>
               <Route path="/" element={<Landing />} />
