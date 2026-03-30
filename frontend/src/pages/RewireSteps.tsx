@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   Brain,
   Search,
@@ -130,36 +132,60 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+
+type RewireProgressResponse = {
+  completedStepNumbers: number[];
+};
+
 export default function RewireStepsPage() {
   const [openStep, setOpenStep] = useState<number | null>(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const queryClient = useQueryClient();
 
-  // Load completed steps from localStorage per user
-  const storageKey = user ? `rewire_progress:${user.id || user.email}` : null;
-
-  const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
-    if (!storageKey) return [];
-    try {
-      const stored = window.localStorage.getItem(storageKey);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["rewire-progress", user?.id],
+    queryFn: async (): Promise<RewireProgressResponse> => {
+      const res = await fetch(`${API_BASE}/api/me/progress/rewire`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to load progress");
+      return res.json();
+    },
+    enabled: !!user && !!token,
   });
 
-  // Persist completed steps whenever they change
-  useEffect(() => {
-    if (!storageKey) return;
-    window.localStorage.setItem(storageKey, JSON.stringify(completedSteps));
-  }, [completedSteps, storageKey]);
+  const mutation = useMutation({
+    mutationFn: async (payload: { stepNumber: number; completed: boolean }) => {
+      if (!token) throw new Error("Not signed in");
+      const res = await fetch(`${API_BASE}/api/me/progress/rewire`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to update progress");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rewire-progress", user?.id] });
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
+
+  const completedSteps = data?.completedStepNumbers ?? [];
 
   const toggleComplete = (stepNumber: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setCompletedSteps((prev) =>
-      prev.includes(stepNumber)
-        ? prev.filter((n) => n !== stepNumber)
-        : [...prev, stepNumber]
-    );
+    if (!user || !token) return;
+    const isCompleted = completedSteps.includes(stepNumber);
+    mutation.mutate({ stepNumber, completed: !isCompleted });
   };
 
   const toggle = (num: number) =>
@@ -200,18 +226,27 @@ export default function RewireStepsPage() {
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-foreground">Your Progress</p>
               <p className="text-xs text-muted-foreground">
-                {completedCount} of {totalCount} steps completed
+                {isLoading
+                  ? "Loading…"
+                  : isError
+                    ? "Could not load"
+                    : `${completedCount} of ${totalCount} steps completed`}
               </p>
             </div>
             <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-primary"
                 initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
+                animate={{ width: `${isError ? 0 : progressPercent}%` }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
             </div>
-            {completedCount === totalCount && (
+            {isError && (
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                Progress could not be loaded. Check your connection and try again.
+              </p>
+            )}
+            {!isLoading && !isError && completedCount === totalCount && (
               <p className="mt-2 text-center text-xs font-medium text-primary">
                 🎉 You've completed all steps!
               </p>
@@ -334,8 +369,10 @@ export default function RewireStepsPage() {
                             <div className="mt-5 flex items-center justify-between">
                               {user && (
                                 <button
+                                  type="button"
+                                  disabled={isLoading || isError || mutation.isPending}
                                   onClick={(e) => toggleComplete(s.number, e)}
-                                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors disabled:opacity-50 ${
                                     isCompleted
                                       ? "bg-primary/10 text-primary hover:bg-primary/20"
                                       : "bg-muted text-muted-foreground hover:bg-muted-foreground/10 hover:text-foreground"

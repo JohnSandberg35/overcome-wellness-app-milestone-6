@@ -168,6 +168,90 @@ app.get("/api/auth/me", requireAuth, async (req, res) => {
   });
 });
 
+const REWIRE_MODULE_TITLE = "The Rewire Program";
+
+// GET /api/me/progress/rewire — completed step numbers (1–5) for the Rewire curriculum
+app.get("/api/me/progress/rewire", requireAuth, async (req, res) => {
+  const userId = parseInt(req.user.id, 10);
+  if (Number.isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid user" });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT cs.sort_order
+       FROM user_progress up
+       JOIN curriculum_steps cs ON cs.id = up.step_id
+       JOIN curriculum_modules cm ON cm.id = cs.module_id
+       WHERE up.user_id = $1 AND cm.title = $2
+       ORDER BY cs.sort_order`,
+      [userId, REWIRE_MODULE_TITLE]
+    );
+    res.json({
+      completedStepNumbers: result.rows.map((row) => row.sort_order),
+    });
+  } catch (err) {
+    console.error("Error fetching rewire progress:", err);
+    res.status(500).json({ error: "Failed to fetch progress" });
+  }
+});
+
+// POST /api/me/progress/rewire — body: { stepNumber: 1–5, completed: boolean }
+app.post("/api/me/progress/rewire", requireAuth, async (req, res) => {
+  const userId = parseInt(req.user.id, 10);
+  const { stepNumber, completed } = req.body;
+
+  if (Number.isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid user" });
+  }
+
+  if (
+    typeof stepNumber !== "number" ||
+    !Number.isInteger(stepNumber) ||
+    stepNumber < 1 ||
+    stepNumber > 5
+  ) {
+    return res.status(400).json({ error: "stepNumber must be an integer from 1 to 5" });
+  }
+
+  if (typeof completed !== "boolean") {
+    return res.status(400).json({ error: "completed must be a boolean" });
+  }
+
+  try {
+    const stepResult = await pool.query(
+      `SELECT cs.id FROM curriculum_steps cs
+       JOIN curriculum_modules cm ON cm.id = cs.module_id
+       WHERE cm.title = $1 AND cs.sort_order = $2`,
+      [REWIRE_MODULE_TITLE, stepNumber]
+    );
+
+    if (stepResult.rows.length === 0) {
+      return res.status(404).json({
+        error:
+          "Rewire curriculum is not seeded. Run db/seed.sql (The Rewire Program module).",
+      });
+    }
+
+    const stepId = stepResult.rows[0].id;
+
+    if (completed) {
+      await pool.query(
+        `INSERT INTO user_progress (user_id, step_id) VALUES ($1, $2)
+         ON CONFLICT (user_id, step_id) DO NOTHING`,
+        [userId, stepId]
+      );
+    } else {
+      await pool.query(
+        `DELETE FROM user_progress WHERE user_id = $1 AND step_id = $2`,
+        [userId, stepId]
+      );
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Error updating rewire progress:", err);
+    res.status(500).json({ error: "Failed to update progress" });
 // POST /api/auth/change-password - Change user password
 app.post("/api/auth/change-password", requireAuth, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
