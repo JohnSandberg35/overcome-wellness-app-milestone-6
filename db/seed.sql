@@ -34,3 +34,19 @@ INSERT INTO curriculum_steps (module_id, title, type, sort_order) VALUES
   (4, 'Trust & Vulnerability', 'video', 1),
   (4, 'Communication Skills', 'reading', 2),
   (4, 'Letter Exercise', 'notes', 3);
+
+-- Rewire Program (matches /curriculum UI — sort_order 1–5 maps to step numbers)
+INSERT INTO curriculum_modules (title, sort_order) VALUES
+  ('The Rewire Program', 5);
+
+INSERT INTO curriculum_steps (module_id, title, type, sort_order)
+SELECT m.id, x.title, x.type, x.sort_order
+FROM curriculum_modules m
+CROSS JOIN (VALUES
+  ('Awareness', 'reading', 1),
+  ('Identify Triggers', 'reading', 2),
+  ('Build Barriers', 'reading', 3),
+  ('Streak Tracking', 'reading', 4),
+  ('Reflect & Reset', 'reading', 5)
+) AS x(title, type, sort_order)
+WHERE m.title = 'The Rewire Program';
