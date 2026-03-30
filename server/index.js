@@ -252,6 +252,9 @@ app.post("/api/me/progress/rewire", requireAuth, async (req, res) => {
   } catch (err) {
     console.error("Error updating rewire progress:", err);
     res.status(500).json({ error: "Failed to update progress" });
+  }
+});
+
 // POST /api/auth/change-password - Change user password
 app.post("/api/auth/change-password", requireAuth, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
