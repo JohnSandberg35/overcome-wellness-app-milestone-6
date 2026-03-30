@@ -5,6 +5,7 @@ import {
   BookOpen,
   Heart,
   Leaf,
+  Library,
   Sunrise,
   Users,
   UserCheck,
@@ -55,17 +56,18 @@ export default function LandingPage() {
 
   return (
     <div className="bg-app-gradient">
-      <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-md flex-col px-4 pb-8 pt-8">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col px-4 pb-8 pt-8 md:max-w-5xl md:px-8 md:pb-16 md:pt-10">
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
           className="flex flex-1 flex-col gap-6"
         >
+          <div className="contents md:grid md:grid-cols-2 md:gap-6 md:items-start">
           {/* Hero */}
           <motion.section
             variants={item}
-            className="glass-card relative overflow-hidden rounded-3xl px-5 py-6 shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
+            className="glass-card relative h-full overflow-hidden rounded-3xl px-5 py-6 shadow-[0_24px_60px_rgba(0,0,0,0.55)] md:col-start-1 md:row-span-2 md:row-start-1"
           >
             <div className="pointer-events-none absolute -left-10 -top-16 h-40 w-40 rounded-full bg-emerald-400/15 blur-3xl" />
             <div className="pointer-events-none absolute -right-10 -bottom-16 h-44 w-44 rounded-full bg-sky-500/20 blur-3xl" />
@@ -112,19 +114,19 @@ export default function LandingPage() {
             </div>
           </motion.section>
 
-          {/* Reassurance */}
+          {/* Reassurance — full width on desktop under hero + right column */}
           <motion.section
             variants={item}
-            className="glass-card flex items-start gap-3 rounded-2xl px-4 py-4"
+            className="glass-card flex items-start gap-3 rounded-2xl px-4 py-4 md:col-span-2 md:row-start-3 md:items-center md:gap-4 md:px-5 md:py-5"
           >
-            <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
+            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300 md:mt-0">
               <Heart className="h-4 w-4" />
             </div>
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-foreground">
+            <div className="min-w-0 space-y-1 md:flex md:flex-1 md:items-center md:gap-6 md:space-y-0">
+              <p className="text-sm font-medium text-foreground md:shrink-0">
                 You&apos;re safe to take your time here.
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground md:border-l md:border-white/10 md:pl-6">
                 Move at your own pace, revisit lessons whenever you need, and
                 leave quickly with the quick-exit button if anything feels
                 uncomfortable.
@@ -133,7 +135,7 @@ export default function LandingPage() {
           </motion.section>
 
           {/* Continue journey */}
-          <motion.section variants={item}>
+          <motion.section variants={item} className="md:col-start-2 md:row-start-1">
             <Link
               to="/curriculum"
               className="group flex items-center justify-between overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-400 via-emerald-300 to-sky-400 px-4 py-4 text-emerald-950 shadow-[0_20px_40px_rgba(16,185,129,0.45)] transition-transform active:scale-[0.98]"
@@ -156,19 +158,17 @@ export default function LandingPage() {
           {/* Community & mentors */}
           <motion.section
             variants={item}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-2 gap-3 md:col-start-2 md:row-start-2"
           >
             <Link
               to="/chat"
-              className="group glass-card flex flex-col items-start gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
+              className="group glass-card flex h-full flex-col items-start gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/20 text-sky-300">
                 <Users className="h-4.5 w-4.5" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-foreground">
-                  Community
-                </p>
+                <p className="text-sm font-semibold text-foreground">Community</p>
                 <p className="text-xs text-muted-foreground">
                   Share wins, setbacks, and everything in between.
                 </p>
@@ -177,7 +177,7 @@ export default function LandingPage() {
 
             <Link
               to="/mentors"
-              className="group glass-card flex flex-col items-start gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
+              className="group glass-card flex h-full flex-col items-start gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300">
                 <UserCheck className="h-4.5 w-4.5" />
@@ -192,18 +192,19 @@ export default function LandingPage() {
               </div>
             </Link>
           </motion.section>
+          </div>
 
           {/* Gentle tools */}
           <motion.section variants={item} className="space-y-3 pb-2">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Gentle tools
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:gap-4">
               {gentleTools.map((tool) => (
                 <Link
                   key={tool.title}
                   to={tool.to}
-                  className="group glass-card flex flex-col gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="group glass-card flex h-full flex-col gap-3 rounded-2xl px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-200">
                     <tool.icon className="h-4 w-4" />
@@ -218,6 +219,35 @@ export default function LandingPage() {
                   </div>
                 </Link>
               ))}
+            </div>
+            <div className="mt-4 border-t border-white/10 pt-4">
+              <Link
+                to="/resources"
+                className="group relative block overflow-hidden rounded-2xl border border-sky-400/25 bg-gradient-to-r from-sky-500/[0.18] via-card/90 to-emerald-500/[0.14] px-4 py-4 shadow-[0_14px_44px_rgba(14,165,233,0.14)] transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-400/45 hover:shadow-[0_18px_52px_rgba(14,165,233,0.22)] active:scale-[0.99]"
+              >
+                <div className="pointer-events-none absolute -right-6 -top-14 h-32 w-32 rounded-full bg-emerald-400/15 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-16 -left-8 h-36 w-36 rounded-full bg-sky-400/20 blur-3xl" />
+
+                <div className="relative flex items-center gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/55 to-emerald-500/45 ring-1 ring-white/25 shadow-lg shadow-sky-900/30">
+                    <Library className="h-7 w-7 text-white drop-shadow-sm" />
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-200/85">
+                      Read · Listen · Follow
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">
+                      More resources
+                    </p>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      Podcasts, articles, and accounts in one library.
+                    </p>
+                  </div>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition-all group-hover:bg-white/[0.16] group-hover:ring-sky-300/35">
+                    <ArrowRight className="h-4 w-4 text-sky-200 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </div>
+              </Link>
             </div>
           </motion.section>
         </motion.div>

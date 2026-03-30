@@ -13,11 +13,11 @@ import ScienceOfRecovery from "./pages/ScienceOfRecovery";
 import BuildingNewHabits from "./pages/BuildingNewHabits";
 import UnderstandingTriggers from "./pages/UnderstandingTriggers";
 import Resources from "./pages/Resources";
-import SiteBlockingGuide from "./pages/SiteBlockingGuide";
 import NotFound from "./pages/NotFound";
 import RewireSteps from "./pages/RewireSteps";
 import Login from "./pages/Login";
-import { AuthProvider } from "@/hooks/useAuth";
+import Account from "./pages/Account";
+import { AuthProvider } from "./hooks/useAuth";
 import PanicButton from "./components/PanicButton";
 
 const queryClient = new QueryClient();
@@ -30,7 +30,8 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <AppHeader />
-          <main className="min-h-[calc(100vh-3.5rem)]">
+          <PanicButton />
+          <main className="min-h-[calc(100vh-4rem)]">
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/onboarding" element={<Onboarding />} />
@@ -39,15 +40,14 @@ const App = () => (
               <Route path="/mentors" element={<Mentors />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/book" element={<BookMentor />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/resources/science-of-recovery" element={<ScienceOfRecovery />} />
               <Route path="/resources/building-new-habits" element={<BuildingNewHabits />} />
               <Route path="/resources/understanding-triggers" element={<UnderstandingTriggers />} />
-              <Route path="/resources/site-blocking-setup" element={<SiteBlockingGuide />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <PanicButton />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>

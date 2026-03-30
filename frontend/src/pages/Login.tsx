@@ -1,15 +1,20 @@
 import { FormEvent, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
-  const { login, isLoading, error } = useAuth();
+  const { login, isLoading, error, user } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // If already signed in, don't show onboarding CTA.
+  if (!isLoading && user) {
+    return <Navigate to="/curriculum" replace />;
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -27,7 +32,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-md px-4 pb-24 pt-8 md:max-w-lg md:px-8 md:pb-16 md:pt-10">
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold text-foreground">Sign in</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -74,9 +79,14 @@ export default function LoginPage() {
 
       <p className="mt-4 text-center text-xs text-muted-foreground">
         New here?{" "}
-        <Link to="/onboarding" className="font-medium text-primary underline-offset-2 hover:underline">
-          Start your onboarding
-        </Link>
+        {!user && (
+          <Link
+            to="/onboarding"
+            className="font-medium text-primary underline-offset-2 hover:underline"
+          >
+            Start your onboarding
+          </Link>
+        )}
         .
       </p>
     </div>

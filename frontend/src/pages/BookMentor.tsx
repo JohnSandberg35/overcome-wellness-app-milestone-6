@@ -31,7 +31,7 @@ export default function BookMentorPage() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-6">
+    <div className="mx-auto max-w-md px-4 pb-24 pt-6 md:max-w-xl md:px-8 md:pb-16 md:pt-10">
       <button
         type="button"
         onClick={() => navigate(-1)}

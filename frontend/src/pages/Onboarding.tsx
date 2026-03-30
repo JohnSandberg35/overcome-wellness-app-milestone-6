@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Check, ArrowRight, ArrowLeft, Heart, Users as UsersIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
@@ -23,8 +23,17 @@ export default function OnboardingPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+  const location = useLocation();
   const navigate = useNavigate();
-  const { signup, isLoading, error } = useAuth();
+  const { signup, isLoading, error, user } = useAuth();
+
+  const redirectAfterSignup =
+    ((location.state as { redirectAfterSignup?: string } | null)?.redirectAfterSignup ?? "/") || "/";
+
+  // Once signed in, onboarding should be inaccessible.
+  if (!isLoading && user) {
+    return <Navigate to="/" replace />;
+  }
 
   const toggleGoal = (g: string) =>
     setSelectedGoals((prev) =>
@@ -56,7 +65,7 @@ export default function OnboardingPage() {
         password,
         accountType: partnerMode ? "affected" : "recovering",
       });
-      navigate("/curriculum");
+      navigate(redirectAfterSignup);
     } catch {
       // Error is surfaced via `error` from useAuth
     }
@@ -245,7 +254,7 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="mx-auto max-w-md px-4 pb-24 pt-8 md:max-w-lg md:px-8 md:pb-16 md:pt-10">
       {/* Progress */}
       <div className="mb-8 flex items-center gap-2">
         {[0, 1, 2].map((i) => (
@@ -284,7 +293,7 @@ export default function OnboardingPage() {
           ) : null
         ) : (
           <button
-            onClick={() => navigate("/curriculum")}
+            onClick={() => navigate(redirectAfterSignup)}
             className="flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
           >
             Start Journey <ArrowRight className="h-4 w-4" />

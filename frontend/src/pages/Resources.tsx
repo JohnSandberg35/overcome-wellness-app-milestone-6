@@ -1,5 +1,5 @@
-import { useState, type ComponentType } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, type ComponentType } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -132,7 +132,7 @@ function SectionHeader({
 }
 
 const cardClass =
-  "group glass-card flex flex-row items-center gap-3.5 rounded-2xl p-3.5 pr-3 transition-all duration-200 hover:-translate-y-0.5 hover:ring-1 hover:ring-white/10 active:scale-[0.99]";
+  "group glass-card flex h-full min-h-0 flex-row items-center gap-3.5 rounded-2xl p-3.5 pr-3 transition-all duration-200 hover:-translate-y-0.5 hover:ring-1 hover:ring-white/10 active:scale-[0.99]";
 
 function ReadCard({ link, index }: { link: ReadLink; index: number }) {
   const Icon = link.kind === "internal" ? BookOpen : Globe;
@@ -259,9 +259,20 @@ function FollowCard({ link, index }: { link: FollowLink; index: number }) {
 }
 
 export default function ResourcesPage() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [hash]);
+
   return (
-    <div className="bg-app-gradient min-h-[calc(100vh-3.5rem)]">
-      <div className="mx-auto max-w-lg px-4 pb-14 pt-5">
+    <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-lg px-4 pb-14 pt-5 md:max-w-5xl md:px-8 md:pb-16 md:pt-10">
         <Link
           to="/"
           className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -303,27 +314,27 @@ export default function ResourcesPage() {
               variants={listContainer}
               initial="hidden"
               animate="show"
-              className="flex flex-col gap-3"
+              className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4"
             >
               {readLinks.map((link, i) => (
-                <motion.div key={readLinkKey(link)} variants={listItem}>
+                <motion.div key={readLinkKey(link)} variants={listItem} className="h-full min-h-0">
                   <ReadCard link={link} index={i} />
                 </motion.div>
               ))}
             </motion.div>
           </section>
 
-          <section className="space-y-4">
+          <section id="listen" className="space-y-4">
             <SectionHeader Icon={Headphones} label="Listen" accent="sky" />
             {listenLinks.length > 0 ? (
               <motion.div
                 variants={listContainer}
                 initial="hidden"
                 animate="show"
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4"
               >
                 {listenLinks.map((link, i) => (
-                  <motion.div key={link.href} variants={listItem}>
+                  <motion.div key={link.href} variants={listItem} className="h-full min-h-0">
                     <ListenCard link={link} index={i} />
                   </motion.div>
                 ))}
@@ -343,12 +354,13 @@ export default function ResourcesPage() {
                 variants={listContainer}
                 initial="hidden"
                 animate="show"
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4"
               >
                 {followLinks.map((link, i) => (
                   <motion.div
                     key={`${link.platform}-${link.href}`}
                     variants={listItem}
+                    className="h-full min-h-0"
                   >
                     <FollowCard link={link} index={i} />
                   </motion.div>

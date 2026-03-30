@@ -12,6 +12,7 @@ import {
   ExternalLink,
   CheckCircle2,
   Lock,
+  ArrowLeft,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -195,7 +196,15 @@ export default function RewireStepsPage() {
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-24 pt-8">
+    <div className="bg-app-gradient min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-lg px-4 pb-24 pt-8 md:max-w-4xl md:px-12">
+      <Link
+        to="/"
+        className="mb-5 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Home
+      </Link>
       <motion.div
         variants={container}
         initial="hidden"
@@ -255,6 +264,13 @@ export default function RewireStepsPage() {
               </Link>{" "}
               to track your progress through the program.
             </p>
+            <Link
+              to="/onboarding"
+              state={{ redirectAfterSignup: "/curriculum" }}
+              className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:opacity-90"
+            >
+              Sign up
+            </Link>
           </motion.div>
         )}
 
@@ -389,6 +405,7 @@ export default function RewireStepsPage() {
           })}
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }
